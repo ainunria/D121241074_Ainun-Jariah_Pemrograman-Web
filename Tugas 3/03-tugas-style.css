@@ -30,6 +30,46 @@ body {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.card__video {
+  width: 100%;
+  display: block;
+  background-color: #000000;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.card__content {
+  padding: 16px; 
+}
+
+.card__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0056b3;
+  margin-bottom: 8px;
+}
+
+.card__description {
+  font-size: 0.875rem;
+  color: #666666;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.card__subtitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 8px;
+}
+
+.card__audio {
+  width: 100%;
+}
 
 @media (min-width: 768px) {
   body {
