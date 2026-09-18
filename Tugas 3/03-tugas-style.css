@@ -1,0 +1,44 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+}
+
+.container {
+  width: 100%;
+  max-width: 650px; 
+}
+
+
+@media (min-width: 768px) {
+  body {
+    padding: 32px;
+  }
+
+  .card__content {
+    padding: 28px; 
+  }
+
+  .card__title {
+    font-size: 1.4rem; 
+    margin-bottom: 12px;
+  }
+
+  .card__description {
+    font-size: 0.95rem;
+  }
+
+  .card__subtitle {
+    font-size: 1.15rem;
+  }
+}
+
+
+.card--active .card__description {
+  color: #444444;
+}
