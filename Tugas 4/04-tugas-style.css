@@ -55,13 +55,25 @@
   }
 }
 
-/* Responsive Tablet (< 992px): Sidebar Kanan Sembunyi / Turun */
-@media (max-width: 991px) {
+/* Responsive Tablet (576px - 991px): Sidebar Kanan Sembunyi
+   Catatan: rentang dibatasi 576px-991px (bukan max-width: 991px saja)
+   supaya di ukuran ponsel (< 576px) kolom kanan TIDAK ikut disembunyikan,
+   melainkan tetap tampil dan bertumpuk sebagai 1 kolom bersama elemen lain. */
+@media (min-width: 576px) and (max-width: 991px) {
   .sidebar-right {
-    display: none; /* Menyembunyikan kolom kanan saat di layar tablet */
+    display: none; /* Menyembunyikan kolom kanan khusus saat di layar tablet */
   }
 }
 
+/* Ponsel (< 576px): pastikan seluruh layout bertumpuk 1 kolom,
+   termasuk sidebar kanan (mengikuti urutan HTML: kiri -> konten -> kanan) */
+@media (max-width: 575px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Grid Mikro Artikel (Kolom Tengah) --- */
 .article-grid {
   display: grid;
   /* Menaikkan nilai minmax ke 280px agar muat maksimal 3 kartu per baris */
