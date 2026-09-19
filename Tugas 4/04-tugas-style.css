@@ -37,6 +37,7 @@
   }
 }
 
+/* Default (Ponsel/Mobile): 1 Kolom Bertumpuk */
 .main-layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -59,4 +60,11 @@
   .sidebar-right {
     display: none; /* Menyembunyikan kolom kanan saat di layar tablet */
   }
+}
+
+.article-grid {
+  display: grid;
+  /* Menaikkan nilai minmax ke 280px agar muat maksimal 3 kartu per baris */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
 }
