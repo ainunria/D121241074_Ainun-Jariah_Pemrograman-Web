@@ -36,3 +36,27 @@
     gap: 0.5rem;
   }
 }
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+/* Responsive Desktop (>= 992px): 3 KOLOM AKTIF */
+@media (min-width: 992px) {
+  .main-layout {
+    /* Kolom 1 (Sidebar Kiri): 200px
+       Kolom 2 (Artikel): Fleksibel (1fr)
+       Kolom 3 (Sidebar Kanan): 220px */
+    grid-template-columns: 200px 1fr 220px; 
+  }
+}
+
+/* Responsive Tablet (< 992px): Sidebar Kanan Sembunyi / Turun */
+@media (max-width: 991px) {
+  .sidebar-right {
+    display: none; /* Menyembunyikan kolom kanan saat di layar tablet */
+  }
+}
