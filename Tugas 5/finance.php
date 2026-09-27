@@ -9,9 +9,39 @@ if (!isset($_SESSION['transactions'])) {
     $_SESSION['transactions'] = [];
 }
 
-// Generate Token CSRF
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+$error = '';
+$success = '';
+
+// Proses Form POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $token = $_POST['csrf_token'] ?? '';
+    
+    // Validasi CSRF Token
+    if (!hash_equals($_SESSION['csrf_token'], $token)) {
+        $error = 'Token CSRF tidak valid!';
+    } else {
+        $type = $_POST['type'] ?? '';
+        $amountInput = $_POST['amount'] ?? '';
+
+        // Validasi tipe transaksi menggunakan match
+        $isValidType = match ($type) {
+            'deposit', 'withdrawal' => true,
+            default => false,
+        };
+
+        // Validasi jumlah transaksi sebagai angka desimal positif
+        if (!$isValidType) {
+            $error = 'Jenis transaksi tidak valid.';
+        } elseif (!is_numeric($amountInput) || (float)$amountInput <= 0) {
+            $error = 'Jumlah transaksi harus berupa angka desimal positif.';
+        } else {
+            // Logika pemrosesan transaksi akan ditambahkan pada tahap selanjutnya
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -23,6 +53,8 @@ if (empty($_SESSION['csrf_token'])) {
     <style>
         body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; }
         .card { border: 1px solid #ccc; padding: 20px; border-radius: 8px; max-width: 500px; margin-bottom: 20px; }
+        .error { color: red; margin-bottom: 10px; }
+        .success { color: green; margin-bottom: 10px; }
         .form-group { margin-bottom: 12px; }
         label { display: block; margin-bottom: 5px; }
         input[type="number"], select { width: 100%; padding: 8px; box-sizing: border-box; }
@@ -36,8 +68,15 @@ if (empty($_SESSION['csrf_token'])) {
     <div class="card">
         <h3>Sisa Saldo: Rp <?= htmlspecialchars(number_format($_SESSION['balance'], 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?></h3>
 
+        <?php if ($error): ?>
+            <p class="error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <p class="success"><?= htmlspecialchars($success, ENT_QUOTES, 'UTF-8') ?></p>
+        <?php endif; ?>
+
         <form action="" method="POST">
-            <!-- CSRF Token Protection -->
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
 
             <div class="form-group">
