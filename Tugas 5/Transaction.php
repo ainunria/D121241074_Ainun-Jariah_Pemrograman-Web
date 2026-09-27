@@ -2,7 +2,6 @@
 
 class Transaction 
 {
-    // Constructor Property Promotion dengan properti private
     public function __construct(
         private string $id,
         private string $type,
@@ -24,17 +23,12 @@ class Transaction
         return $this->amount;
     }
 
-    /**
-     * Memproses transaksi berdasarkan tipe (deposit / withdrawal).
-     * Saldo diupdate langsung ke array $_SESSION['balance'].
-     */
     public function process(): bool 
     {
         if (!isset($_SESSION['balance'])) {
             $_SESSION['balance'] = 0.0;
         }
 
-        // Ekspresi match untuk memproses tipe transaksi
         return match ($this->type) {
             'deposit' => $this->handleDeposit(),
             'withdrawal' => $this->handleWithdrawal(),
@@ -50,7 +44,6 @@ class Transaction
 
     private function handleWithdrawal(): bool 
     {
-        // Tolak jika saldo tidak mencukupi
         if ($_SESSION['balance'] < $this->amount) {
             return false;
         }
