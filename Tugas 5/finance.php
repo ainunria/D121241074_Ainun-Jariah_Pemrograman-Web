@@ -16,30 +16,41 @@ if (empty($_SESSION['csrf_token'])) {
 $error = '';
 $success = '';
 
-// Proses Form POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = $_POST['csrf_token'] ?? '';
     
-    // Validasi CSRF Token
     if (!hash_equals($_SESSION['csrf_token'], $token)) {
         $error = 'Token CSRF tidak valid!';
     } else {
         $type = $_POST['type'] ?? '';
         $amountInput = $_POST['amount'] ?? '';
 
-        // Validasi tipe transaksi menggunakan match
         $isValidType = match ($type) {
             'deposit', 'withdrawal' => true,
             default => false,
         };
 
-        // Validasi jumlah transaksi sebagai angka desimal positif
         if (!$isValidType) {
             $error = 'Jenis transaksi tidak valid.';
         } elseif (!is_numeric($amountInput) || (float)$amountInput <= 0) {
             $error = 'Jumlah transaksi harus berupa angka desimal positif.';
         } else {
-            // Logika pemrosesan transaksi akan ditambahkan pada tahap selanjutnya
+            $amount = (float)$amountInput;
+            $transactionId = 'TX-' . uniqid();
+
+            $transaction = new Transaction($transactionId, $type, $amount);
+
+            if ($transaction->process()) {
+                $_SESSION['transactions'][] = [
+                    'id' => $transaction->getId(),
+                    'type' => $transaction->getType(),
+                    'amount' => $transaction->getAmount(),
+                    'timestamp' => date('Y-m-d H:i:s')
+                ];
+                $success = 'Transaksi berhasil diproses!';
+            } else {
+                $error = 'Gagal memproses transaksi. Saldo tidak mencukupi!';
+            }
         }
     }
 }
