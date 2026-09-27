@@ -8,6 +8,11 @@ if (!isset($_SESSION['balance'])) {
 if (!isset($_SESSION['transactions'])) {
     $_SESSION['transactions'] = [];
 }
+
+// Generate Token CSRF
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -32,6 +37,9 @@ if (!isset($_SESSION['transactions'])) {
         <h3>Sisa Saldo: Rp <?= htmlspecialchars(number_format($_SESSION['balance'], 2, ',', '.'), ENT_QUOTES, 'UTF-8') ?></h3>
 
         <form action="" method="POST">
+            <!-- CSRF Token Protection -->
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
+
             <div class="form-group">
                 <label for="type">Jenis Transaksi:</label>
                 <select name="type" id="type" required>
