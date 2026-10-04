@@ -272,4 +272,10 @@ BUKU
     │ 1
 PENERBIT
 ```
+---
 
+## 7. Kesimpulan
+
+Rancangan database E-Library terdiri dari lima tabel utama, yaitu Mahasiswa, Penerbit, Buku, Transaksi_Peminjaman, dan Detail_Peminjaman. Setiap tabel memiliki Primary Key sebagai identitas unik dan Foreign Key untuk menghubungkan tabel yang saling berelasi.
+
+Pemisahan tabel dilakukan melalui proses normalisasi dari UNF, 1NF, 2NF, hingga 3NF untuk mengurangi redundansi dan menjaga konsistensi data. Dengan struktur tersebut, database dapat menyimpan data mahasiswa, buku, penerbit, serta riwayat peminjaman dan pengembalian secara terstruktur.
