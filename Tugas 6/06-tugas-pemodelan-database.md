@@ -198,7 +198,7 @@ Tabel Detail_Peminjaman berfungsi sebagai tabel penghubung untuk relasi **many-t
 
 ---
 
-## 5. Visualisasi Relasi Kunci menggunakan Diagram Mermaid
+## 5. ERD Menggunakan Mermaid
 
 ```mermaid
 erDiagram
@@ -243,3 +243,33 @@ erDiagram
         DATE tanggal_kembali
         VARCHAR status
     }
+```
+
+---
+
+## 6. Struktur Relasi 
+
+```text
+MAHASISWA
+    │
+    │ 1
+    │
+    │ N
+TRANSAKSI_PEMINJAMAN
+    │
+    │ 1
+    │
+    │ N
+DETAIL_PEMINJAMAN
+    │
+    │ N
+    │
+    │ 1
+BUKU
+    │
+    │ N
+    │
+    │ 1
+PENERBIT
+```
+
