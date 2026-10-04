@@ -65,3 +65,38 @@ Entitas yang digunakan:
 | status | VARCHAR(20) | - | Status buku: `Dipinjam` atau `Dikembalikan` |
 
 Primary Key pada tabel Detail_Peminjaman merupakan gabungan **id_peminjaman** dan **id_buku**.
+
+---
+
+## 3. Normalisasi Data
+
+Normalisasi dilakukan dengan satu contoh kasus yang sama di setiap tahap: mahasiswa Ani meminjam dua buku dalam satu transaksi P001.
+
+### 3.1 Unnormalized Form (UNF)
+
+Pada bentuk awal, seluruh informasi peminjaman dicatat dalam satu tabel. Satu transaksi dapat memiliki lebih dari satu buku, sehingga ada kolom yang berisi banyak nilai (repeating group).
+
+| ID Peminjaman | ID Mahasiswa | NIM | Nama Mahasiswa | Jurusan | Email | ID Buku | Judul Buku | ID Penerbit | Nama Penerbit | Tanggal Pinjam | Batas Kembali | Tanggal Kembali | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| P001 | M01 | 221001 | Ani | Teknik Informatika | ani@kampus.ac.id | B001, B002 | Basis Data, Pemrograman Python | PB1, PB2 | Andi, Erlangga | 01-10-2026 | 08-10-2026 | 05-10-2026, - | Dikembalikan, Dipinjam |
+
+Masalah pada UNF:
+
+- Kolom ID Buku, Judul Buku, Penerbit, Tanggal Kembali, dan Status memuat lebih dari satu nilai.
+- Data mahasiswa dan penerbit akan berulang pada setiap transaksi (redundansi).
+- Sulit dicari, diubah, dan dihapus apabila jumlah buku dalam satu transaksi bertambah.
+
+---
+
+### 3.2 First Normal Form (1NF)
+
+Syarat 1NF: setiap atribut bernilai atomik (satu kolom hanya menyimpan satu nilai) dan setiap baris dapat diidentifikasi secara unik.
+
+Data dipecah sehingga setiap baris hanya merepresentasikan **satu buku dalam satu transaksi**. Primary Key sementara: **(ID Peminjaman, ID Buku)**.
+
+| ID Peminjaman | ID Mahasiswa | NIM | Nama Mahasiswa | Jurusan | Email | ID Buku | Judul Buku | ID Penerbit | Nama Penerbit | Tanggal Pinjam | Batas Kembali | Tanggal Kembali | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| P001 | M01 | 221001 | Ani | Teknik Informatika | ani@kampus.ac.id | B001 | Basis Data | PB1 | Andi | 01-10-2026 | 08-10-2026 | 05-10-2026 | Dikembalikan |
+| P001 | M01 | 221001 | Ani | Teknik Informatika | ani@kampus.ac.id | B002 | Pemrograman Python | PB2 | Erlangga | 01-10-2026 | 08-10-2026 | NULL | Dipinjam |
+
+Seluruh nilai sudah atomik. Namun data mahasiswa, tanggal transaksi, dan data buku masih berulang pada setiap baris.
