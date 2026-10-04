@@ -195,3 +195,51 @@ Relasi antar tabel adalah sebagai berikut:
    - Kardinalitas: **1 : N**
 
 Tabel Detail_Peminjaman berfungsi sebagai tabel penghubung untuk relasi **many-to-many** antara Transaksi_Peminjaman dan Buku.
+
+---
+
+## 5. Visualisasi Relasi Kunci menggunakan Diagram Mermaid
+
+```mermaid
+erDiagram
+    MAHASISWA ||--o{ TRANSAKSI_PEMINJAMAN : melakukan
+    TRANSAKSI_PEMINJAMAN ||--|{ DETAIL_PEMINJAMAN : memiliki
+    BUKU ||--o{ DETAIL_PEMINJAMAN : dipinjam
+    PENERBIT ||--o{ BUKU : menerbitkan
+
+    MAHASISWA {
+        INT id_mahasiswa PK
+        VARCHAR nim UK
+        VARCHAR nama_mahasiswa
+        VARCHAR jurusan
+        VARCHAR email
+    }
+
+    PENERBIT {
+        INT id_penerbit PK
+        VARCHAR nama_penerbit
+        VARCHAR alamat
+    }
+
+    BUKU {
+        INT id_buku PK
+        VARCHAR judul_buku
+        VARCHAR penulis
+        YEAR tahun_terbit
+        INT stok
+        INT id_penerbit FK
+    }
+
+    TRANSAKSI_PEMINJAMAN {
+        INT id_peminjaman PK
+        INT id_mahasiswa FK
+        DATE tanggal_pinjam
+        DATE batas_kembali
+    }
+
+    DETAIL_PEMINJAMAN {
+        INT id_peminjaman PK, FK
+        INT id_buku PK, FK
+        DATE tanggal_kembali
+        VARCHAR status
+    }
