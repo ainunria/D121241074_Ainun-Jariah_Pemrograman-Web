@@ -167,3 +167,31 @@ Solusinya, atribut yang bergantung transitif dipindahkan ke tabel sendiri, dan t
 Dengan demikian, setiap atribut non-key hanya bergantung pada Primary Key tabelnya masing-masing. Data mahasiswa dan penerbit cukup disimpan satu kali, lalu direferensikan melalui Foreign Key.
 
 Hasil akhir telah memenuhi bentuk normal hingga **3NF**.
+
+---
+
+## 4. Relasi Antar Entitas
+
+Relasi antar tabel adalah sebagai berikut:
+
+1. **Mahasiswa → Transaksi_Peminjaman**
+   - Satu mahasiswa dapat melakukan banyak transaksi peminjaman.
+   - Satu transaksi peminjaman hanya dilakukan oleh satu mahasiswa.
+   - Kardinalitas: **1 : N**
+
+2. **Transaksi_Peminjaman → Detail_Peminjaman**
+   - Satu transaksi dapat memiliki satu atau banyak detail buku.
+   - Satu detail hanya dimiliki oleh satu transaksi.
+   - Kardinalitas: **1 : N**
+
+3. **Buku → Detail_Peminjaman**
+   - Satu buku dapat muncul pada banyak detail transaksi dari waktu ke waktu.
+   - Satu detail hanya mengacu pada satu buku.
+   - Kardinalitas: **1 : N**
+
+4. **Penerbit → Buku**
+   - Satu penerbit dapat menerbitkan banyak buku.
+   - Satu buku memiliki satu penerbit.
+   - Kardinalitas: **1 : N**
+
+Tabel Detail_Peminjaman berfungsi sebagai tabel penghubung untuk relasi **many-to-many** antara Transaksi_Peminjaman dan Buku.
