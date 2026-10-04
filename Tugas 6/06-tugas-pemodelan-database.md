@@ -45,3 +45,23 @@ Entitas yang digunakan:
 | tahun_terbit | YEAR | - | Tahun buku diterbitkan |
 | stok | INT | - | Jumlah buku yang tersedia |
 | id_penerbit | INT | FK | Mengacu pada tabel Penerbit |
+
+### D. Tabel Transaksi_Peminjaman
+
+| Atribut | Tipe Data | Key | Keterangan |
+|---|---|---|---|
+| id_peminjaman | INT | PK | Identitas unik transaksi |
+| id_mahasiswa | INT | FK | Mahasiswa yang melakukan peminjaman |
+| tanggal_pinjam | DATE | - | Tanggal peminjaman |
+| batas_kembali | DATE | - | Batas waktu pengembalian |
+
+### E. Tabel Detail_Peminjaman
+
+| Atribut | Tipe Data | Key | Keterangan |
+|---|---|---|---|
+| id_peminjaman | INT | PK, FK | Mengacu pada transaksi peminjaman |
+| id_buku | INT | PK, FK | Mengacu pada buku yang dipinjam |
+| tanggal_kembali | DATE (NULL) | - | Tanggal buku dikembalikan; bernilai NULL selama buku belum dikembalikan |
+| status | VARCHAR(20) | - | Status buku: `Dipinjam` atau `Dikembalikan` |
+
+Primary Key pada tabel Detail_Peminjaman merupakan gabungan **id_peminjaman** dan **id_buku**.
