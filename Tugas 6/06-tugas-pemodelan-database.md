@@ -100,3 +100,70 @@ Data dipecah sehingga setiap baris hanya merepresentasikan **satu buku dalam sat
 | P001 | M01 | 221001 | Ani | Teknik Informatika | ani@kampus.ac.id | B002 | Pemrograman Python | PB2 | Erlangga | 01-10-2026 | 08-10-2026 | NULL | Dipinjam |
 
 Seluruh nilai sudah atomik. Namun data mahasiswa, tanggal transaksi, dan data buku masih berulang pada setiap baris.
+
+---
+
+### 3.3 Second Normal Form (2NF)
+
+Syarat 2NF: sudah 1NF dan **tidak ada ketergantungan parsial**, yaitu atribut non-key harus bergantung pada **seluruh** Primary Key, bukan hanya sebagian.
+
+Dengan Primary Key gabungan **(ID Peminjaman, ID Buku)**, ketergantungan fungsionalnya adalah:
+
+| Ketergantungan | Jenis |
+|---|---|
+| ID Peminjaman → ID Mahasiswa, NIM, Nama Mahasiswa, Jurusan, Email, Tanggal Pinjam, Batas Kembali | Parsial (hanya bergantung pada ID Peminjaman) |
+| ID Buku → Judul Buku, ID Penerbit, Nama Penerbit | Parsial (hanya bergantung pada ID Buku) |
+| (ID Peminjaman, ID Buku) → Tanggal Kembali, Status | Penuh (bergantung pada seluruh PK) |
+
+Untuk menghilangkan ketergantungan parsial, tabel dipecah menjadi tiga:
+
+**Transaksi_Peminjaman** (PK: id_peminjaman)
+
+| id_peminjaman | id_mahasiswa | nim | nama_mahasiswa | jurusan | email | tanggal_pinjam | batas_kembali |
+|---|---|---|---|---|---|---|---|
+| P001 | M01 | 221001 | Ani | Teknik Informatika | ani@kampus.ac.id | 01-10-2026 | 08-10-2026 |
+
+**Buku** (PK: id_buku)
+
+| id_buku | judul_buku | id_penerbit | nama_penerbit |
+|---|---|---|---|
+| B001 | Basis Data | PB1 | Andi |
+| B002 | Pemrograman Python | PB2 | Erlangga |
+
+**Detail_Peminjaman** (PK: id_peminjaman + id_buku)
+
+| id_peminjaman | id_buku | tanggal_kembali | status |
+|---|---|---|---|
+| P001 | B001 | 05-10-2026 | Dikembalikan |
+| P001 | B002 | NULL | Dipinjam |
+
+Pada tahap ini ketergantungan parsial sudah hilang. Namun masih ada ketergantungan antar atribut non-key (lihat 3NF).
+
+---
+
+### 3.4 Third Normal Form (3NF)
+
+Syarat 3NF: sudah 2NF dan **tidak ada ketergantungan transitif**, yaitu atribut non-key tidak boleh bergantung pada atribut non-key lainnya.
+
+Ketergantungan transitif yang masih ada pada hasil 2NF:
+
+- Pada **Transaksi_Peminjaman**:
+  `id_peminjaman → id_mahasiswa → nim, nama_mahasiswa, jurusan, email`
+  Atribut `nim`, `nama_mahasiswa`, `jurusan`, dan `email` bergantung pada `id_mahasiswa` (non-key), bukan langsung pada `id_peminjaman`.
+- Pada **Buku**:
+  `id_buku → id_penerbit → nama_penerbit, alamat`
+  Atribut `nama_penerbit` dan `alamat` bergantung pada `id_penerbit` (non-key), bukan langsung pada `id_buku`.
+
+Solusinya, atribut yang bergantung transitif dipindahkan ke tabel sendiri, dan tabel lama hanya menyimpan Foreign Key:
+
+| Tabel hasil 3NF | Isi | Foreign Key |
+|---|---|---|
+| **Mahasiswa** | id_mahasiswa, nim, nama_mahasiswa, jurusan, email | - |
+| **Penerbit** | id_penerbit, nama_penerbit, alamat | - |
+| **Buku** | id_buku, judul_buku, penulis, tahun_terbit, stok, id_penerbit | id_penerbit → Penerbit |
+| **Transaksi_Peminjaman** | id_peminjaman, id_mahasiswa, tanggal_pinjam, batas_kembali | id_mahasiswa → Mahasiswa |
+| **Detail_Peminjaman** | id_peminjaman, id_buku, tanggal_kembali, status | id_peminjaman → Transaksi_Peminjaman, id_buku → Buku |
+
+Dengan demikian, setiap atribut non-key hanya bergantung pada Primary Key tabelnya masing-masing. Data mahasiswa dan penerbit cukup disimpan satu kali, lalu direferensikan melalui Foreign Key.
+
+Hasil akhir telah memenuhi bentuk normal hingga **3NF**.
