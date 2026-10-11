@@ -38,40 +38,91 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$dataPesan = $guestbook->ambilPesan();
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Buku Tamu Perpustakaan</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9; color: #333; }
+        .container { max-width: 600px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: auto; }
+        h2 { text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="email"], textarea { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        textarea { resize: vertical; height: 100px; }
+        button { background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        .alert-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+        .alert-success { background: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+        table { width: 100%; margin-top: 30px; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }
+        th { background-color: #f2f2f2; }
+    </style>
 </head>
 <body>
+<div class="container">
     <h2>Buku Tamu Perpustakaan</h2>
     <?php if (!empty($errors)): ?>
-        <ul>
-            <?php foreach ($errors as $error): ?>
-                <li><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></li>
-            <?php endforeach; ?>
-        </ul>
+        <div class="alert-error">
+            <ul>
+                <?php foreach ($errors as $error): ?>
+                    <li><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
     <?php endif; ?>
     <?php if (!empty($success)): ?>
-        <p style="color: green;"><?= htmlspecialchars($success, ENT_QUOTES, 'UTF-8') ?></p>
+        <div class="alert-success"><?= htmlspecialchars($success, ENT_QUOTES, 'UTF-8') ?></div>
     <?php endif; ?>
     <form method="POST" action="">
         <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-        <div>
-            <label>Nama:</label><br>
-            <input type="text" name="nama" value="<?= htmlspecialchars($nama ?? '', ENT_QUOTES, 'UTF-8') ?>">
+        <div class="form-group">
+            <label for="nama">Nama:</label>
+            <input type="text" id="nama" name="nama" value="<?= htmlspecialchars($nama ?? '', ENT_QUOTES, 'UTF-8') ?>">
         </div>
-        <div>
-            <label>Email:</label><br>
-            <input type="email" name="email" value="<?= htmlspecialchars($email ?? '', ENT_QUOTES, 'UTF-8') ?>">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="<?= htmlspecialchars($email ?? '', ENT_QUOTES, 'UTF-8') ?>">
         </div>
-        <div>
-            <label>Pesan:</label><br>
-            <textarea name="pesan"><?= htmlspecialchars($pesan ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
+        <div class="form-group">
+            <label for="pesan">Pesan:</label>
+            <textarea id="pesan" name="pesan"><?= htmlspecialchars($pesan ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
         </div>
         <button type="submit">Kirim Pesan</button>
     </form>
+    <h3>Daftar Tamu</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Email</th>
+                <th>Pesan</th>
+                <th>Tanggal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($dataPesan)): ?>
+                <?php $no = 1; foreach ($dataPesan as $row): ?>
+                    <tr>
+                        <td><?= $no++ ?></td>
+                        <td><?= htmlspecialchars($row['nama'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($row['email'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($row['pesan'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($row['tanggal_kirim'], ENT_QUOTES, 'UTF-8') ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="5" style="text-align: center;">Belum ada pesan.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
