@@ -15,5 +15,14 @@ class GuestBook {
             die("Koneksi gagal: " . $e->getMessage());
         }
     }
+
+    public function tambahPesan($nama, $email, $pesan) {
+        $stmt = $this->pdo->prepare("INSERT INTO buku_tamu (nama, email, pesan) VALUES (:nama, :email, :pesan)");
+        return $stmt->execute([
+            ':nama' => $nama,
+            ':email' => $email,
+            ':pesan' => $pesan
+        ]);
+    }
 }
 ?>
