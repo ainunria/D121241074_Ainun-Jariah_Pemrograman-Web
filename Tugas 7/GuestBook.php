@@ -24,5 +24,10 @@ class GuestBook {
             ':pesan' => $pesan
         ]);
     }
+
+    public function ambilPesan() {
+        $stmt = $this->pdo->query("SELECT * FROM buku_tamu ORDER BY tanggal_kirim DESC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
