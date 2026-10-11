@@ -6,11 +6,13 @@ $guestbook = new GuestBook();
 $errors = [];
 $success = "";
 
+// Buat CSRF token
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validasi CSRF Token
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("Validasi CSRF gagal.");
     }
@@ -19,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $pesan = trim($_POST['pesan'] ?? '');
 
+    // Validasi input
     if (empty($nama)) {
         $errors[] = "Nama tidak boleh kosong.";
     }
@@ -29,9 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Pesan minimal harus terdiri dari 5 karakter.";
     }
 
+    // Jika lolos validasi, simpan ke database
     if (empty($errors)) {
         if ($guestbook->tambahPesan($nama, $email, $pesan)) {
             $success = "Pesan berhasil dikirim!";
+            // Reset input setelah sukses
             $nama = $email = $pesan = "";
         } else {
             $errors[] = "Gagal menyimpan pesan ke database.";
